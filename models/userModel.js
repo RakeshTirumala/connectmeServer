@@ -10,10 +10,7 @@ const userSchema = mongoose.Schema({
     Education: [],
     WorkExperience: [],
     Connections: [],
-    Projects: [{
-      name: { type: String, required: true },
-      description: { type: String, required: true }
-    }],
+    Projects: [],
     Activity: {
       liked: [],
       commented: [],

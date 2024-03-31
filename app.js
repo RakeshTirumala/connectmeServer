@@ -11,6 +11,7 @@ const PORT = 1111
 const jwt = require('jsonwebtoken');
 const Chat = require('./models/chatModel')
 const chatRouter = require('./routers/chatRouter')
+const profileRouter = require('./routers/profileRouter')
 
 mongoose.connect(process.env.MONGODB_CLUSTER)
 
@@ -19,12 +20,14 @@ app.use(cors())
 app.get("/", (req,res)=>{
     console.log("Connectme...");
 })
-
+ 
 app.use("/api/signup", signupRouter);
 
 app.use("/api/login", loginRouter)
 
 app.use("/api/chats", chatRouter)
+
+app.use("/api/profile", profileRouter)
 
 const server = app.listen(process.env.PORT || PORT);
 
