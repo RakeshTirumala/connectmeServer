@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const express = require('express')
 const mongoose = require('mongoose')
 const loginRouter = require('./routers/loginRouter')
@@ -13,38 +12,16 @@ const jwt = require('jsonwebtoken');
 const Chat = require('./models/chatModel')
 const chatRouter = require('./routers/chatRouter')
 const profileRouter = require('./routers/profileRouter')
-=======
-const express = require("express");
-const mongoose = require("mongoose");
-const loginRouter = require("./routers/loginRouter");
-const app = express();
-app.use(express.json());
-require("dotenv").config();
-const cors = require("cors");
-const signupRouter = require("./routers/signupRouter");
-const ws = require("ws");
-const PORT = 1111;
-const jwt = require("jsonwebtoken");
-const Chat = require("./models/chatModel");
-const chatRouter = require("./routers/chatRouter");
 const userRouter = require("./routers/userRouter");
->>>>>>> aa47c79 (test)
 
 mongoose.connect(process.env.MONGODB_CLUSTER);
 
 app.use(cors());
 
-<<<<<<< HEAD
 app.get("/", (req,res)=>{
     console.log("Connectme...");
 })
  
-=======
-app.get("/", (req, res) => {
-  console.log("Connectme...");
-});
-
->>>>>>> aa47c79 (test)
 app.use("/api/signup", signupRouter);
 app.use("/api/user", userRouter);
 

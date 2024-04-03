@@ -1,42 +1,20 @@
 const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
-<<<<<<< HEAD
-    firstName: { type: String},
-    lastName: { type: String},
-    email: { type: String, required: true },
-    password:{type:String, required:true},
-    mobile: { type: String},
-    newUser: { type: Boolean, required: true },
-    Education: [],
-    WorkExperience: [],
-    Connections: [],
-    Projects: [],
-    Activity: {
-      liked: [],
-      commented: [],
-      posted: []
-=======
-  firstName: { type: String },
-  lastName: { type: String },
+  firstName: { type: String},
+  lastName: { type: String},
   email: { type: String, required: true },
-  password: { type: String, required: true },
-  mobile: { type: String },
+  password:{type:String, required:true},
+  mobile: { type: String},
   newUser: { type: Boolean, required: true },
   Education: [],
   WorkExperience: [],
   Connections: [],
-  Projects: [
-    {
-      name: { type: String, required: true },
-      description: { type: String, required: true },
->>>>>>> aa47c79 (test)
-    },
-  ],
+  Projects: [],
   Activity: {
     liked: [],
     commented: [],
-    posted: [],
+    posted: []
   },
   Interests: [String],
   dp: { type: Buffer },
