@@ -13,6 +13,7 @@ const Chat = require('./models/chatModel')
 const chatRouter = require('./routers/chatRouter')
 const profileRouter = require('./routers/profileRouter')
 const userRouter = require("./routers/userRouter");
+const networkRouter = require('./routers/networkRouter')
 
 mongoose.connect(process.env.MONGODB_CLUSTER);
 
@@ -30,6 +31,8 @@ app.use("/api/login", loginRouter);
 app.use("/api/chats", chatRouter);
 
 app.use("/api/profile", profileRouter)
+
+app.use("/api/network", networkRouter)
 
 const server = app.listen(process.env.PORT || PORT);
 
