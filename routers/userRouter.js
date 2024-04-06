@@ -9,21 +9,19 @@ const userRouter = express.Router();
 
 // CORS middleware
 userRouter.use(CORS);
-
+ 
 userRouter.get(
   "/getUserConnections",
   expressAsyncHandler(async (request, response) => {
     const email = request.query.email;
     try {
       const existingUser = await User.findOne({ email });
-      const user = {
-        email: existingUser.email,
-        connections: existingUser.Connections,
-        requests: existingUser.Requests,
-      };
-      //RESPONSE
+      const connections = existingUser.Connections;
+      const wholeUserOfConnections = await User.find({
+        email:{$in:connections}
+      }).select('firstName lastName email dp')
 
-      response.status(200).json({ message: "Login successful!", user: user });
+      response.status(200).json({ message: "Login successful!", users: wholeUserOfConnections});
     } catch (error) {
       console.log(error);
       response.status(500).json({ error: "Internal Error!" });

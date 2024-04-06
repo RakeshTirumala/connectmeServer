@@ -14,10 +14,12 @@ chatRouter.use(CORS);
 chatRouter.get('/byuserId', async(request, response)=>{
     try{
         const id = request.query.id
+        const current = request.query.current;
+        const chatMembers = [current, id];
         const conversation = await Chat.find({
-            $or:[
-                {senderId:{$in:id}},
-                {receiverId:{$in:id}}
+            $and:[
+                {senderId:{$in:chatMembers}},
+                {receiverId:{$in:chatMembers}}
             ]
         })
         response.send({id:conversation})
