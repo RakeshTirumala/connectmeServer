@@ -24,7 +24,6 @@ signupRouter.post('/', expressAsyncHandler(async(request, response)=>{
         const connections = []
         const projects=[]
         const posts = []
-        const activity = {liked:[], commented:[], posted:[]}
         const interests = []
         const userType = "Student"
         
@@ -40,7 +39,9 @@ signupRouter.post('/', expressAsyncHandler(async(request, response)=>{
             connections,
             projects,
             posts,
-            activity,
+            liked:[],
+            commented:[],
+            posted:[],
             interests,
             userType
         })

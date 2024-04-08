@@ -11,11 +11,9 @@ const userSchema = mongoose.Schema({
   WorkExperience: [],
   Connections: [],
   Projects: [],
-  Activity: {
-    liked: [],
-    commented: [],
-    posted: []
-  },
+  liked:[],
+  commented:[],
+  posted:[],
   Interests: [String],
   dp: { type: Buffer },
   userType: { type: String },

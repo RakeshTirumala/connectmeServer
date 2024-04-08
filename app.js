@@ -15,6 +15,7 @@ const profileRouter = require('./routers/profileRouter')
 const userRouter = require("./routers/userRouter");
 const networkRouter = require('./routers/networkRouter')
 const messengerRouter = require('./routers/messengerRouter')
+const exploreRouter = require('./routers/exploreRouter')
 
 mongoose.connect(process.env.MONGODB_CLUSTER);
 
@@ -36,6 +37,8 @@ app.use("/api/profile", profileRouter);
 app.use("/api/network", networkRouter);
 
 app.use("/api/messenger", messengerRouter);
+
+app.use("/api/feed", exploreRouter);
 
 const server = app.listen(process.env.PORT || PORT);
 
