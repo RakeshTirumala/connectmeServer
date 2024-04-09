@@ -17,6 +17,12 @@ const networkRouter = require('./routers/networkRouter')
 const messengerRouter = require('./routers/messengerRouter')
 const exploreRouter = require('./routers/exploreRouter')
 
+
+// const run = async()=>{
+//   await mongoose.connect(process.env.MONGODB_CLUSTER);
+// }
+
+// run().catch(err=>console.log(err));
 mongoose.connect(process.env.MONGODB_CLUSTER);
 
 app.use(cors());

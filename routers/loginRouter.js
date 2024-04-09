@@ -17,14 +17,16 @@ loginRouter.post('/', expressAsyncHandler(async(request, response)=>{
     try{
     
         //VALIDATING EMAIL AND PASSWORD
-        const existingUser = await User.findOne({email});
+        console.log("VALIDATING EMAIL AND PASSWORD")
+        const existingUser = await User.findOne({email:email});
         if(!existingUser) return response.status(401).json({error:"Invalid email or password!"});
-
+        
         const passwordMatch = await bcrypt.compare(password, existingUser.password);
     
         if(!passwordMatch) return response.status(401).json({error:"Invalid email or password!"});
 
         //GENERATE TOKEN 
+        console.log("GENERATE TOKEN")
         const token = jwt.sign({ email: email}, process.env.JWT_SECRET_KEY);
 
         const user = {

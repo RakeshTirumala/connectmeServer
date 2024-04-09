@@ -8,8 +8,74 @@ const exploreRouter = express.Router();
 
 exploreRouter.use(CORS);
 
+// FETCHING LIKES OF A POST
+exploreRouter.get('/postActivity/likes', expressAsyncHandler(async(request, response)=>{
+    const postId = request.query.postId;
+    try{
+        const post = await Post.findOne({_id:postId})
+        const likes = post.likes;
+        let likedUsers = [];
+        for(const id of likes){
+            const user = await User.findOne({email:id}).select("firstName lastName dp email");
+            likedUsers.push(user);
+        }
+        response.status(200).send({likedUsers:likedUsers});
+    }catch(error){
+        response.status(500).send({message:"Internal Error!!!"});
+    }
+}))
 
-//  UPDATING LIKES ARRAY OF THE POST
+// FETCHING COMMENTS OF A POST
+exploreRouter.get('/postActivity/comments', expressAsyncHandler(async(request, response)=>{
+    const postId = request.query.postId;
+    console.log(postId)
+    try{
+        const post = await Post.findOne({_id:postId})
+        // console.log(post)
+        const comments = post.comments;
+        let commentedUsers = [];
+        for(const commentData of comments){
+            const user = await User.findOne({email:commentData.userId}).select("firstName lastName dp email");
+            // console.log(user.firstName)
+            const data = {
+                firstName:user.firstName,
+                lastName:user.lastName,
+                dp:user.dp,
+                email:user.email,
+                data:commentData.data
+            }
+            commentedUsers.push(data);
+        }
+        response.status(200).send({commentedUsers:commentedUsers});
+    }catch(error){
+        response.status(500).send({message:"Internal Error!!!"});
+    }
+}))
+
+// UPDATING COMMENTS ARRAY OF THE POST 
+exploreRouter.put('/postActivityComments', expressAsyncHandler(async(request, response)=>{
+    const {currentUser, postId, commentData} = request.body;
+    let updated = null;
+    try{
+        updated = await Post.findOneAndUpdate(
+            {_id:postId},
+            {$push:{comments:commentData}},
+            {new:true}
+        )
+        if(updated){
+            updated = await User.findOneAndUpdate(
+                {email:currentUser},
+                {$push:{commented:postId}},
+                {new:true}
+            )
+        }
+        if(updated) response.status(200).send({message:"Success!!!"});
+    }catch(error){
+        response.status(500).send({message:"Internal Error!"})
+    }
+}))
+
+//  UPDATING LIKES ARRAY OF THE POST AS WELL AS THE LIKED ARRAY OF THE USER
 exploreRouter.put('/postActivity', expressAsyncHandler(async(request, response)=>{
     const {currentUser, postId, shouldIAddUserLike} = request.body;
     let updated = null;
@@ -20,12 +86,26 @@ exploreRouter.put('/postActivity', expressAsyncHandler(async(request, response)=
                 {$push:{likes:currentUser}},
                 {new:true}
             )
+            if(updated){
+                await User.findOneAndUpdate(
+                    {email:currentUser},
+                    {$push:{liked:postId}},
+                    {new:true}
+                )
+            }
         }else{
             updated = await Post.findOneAndUpdate(
                 {_id:postId},
                 {$pull:{likes:currentUser}},
                 {new:true}
             )
+            if(updated){
+                await User.findOneAndUpdate(
+                    {email:currentUser},
+                    {$pull:{liked:updated}},
+                    {new: true}
+                )
+            }
         }
         if(updated) response.status(200).send({message:"Success!!!"})
     }catch(error){
@@ -72,24 +152,23 @@ exploreRouter.get('/', expressAsyncHandler(async(request, response)=>{
         for (const connectionEmail of connectionsOfCurrentUser) {
             const connection = await User.findOne({ email: connectionEmail });
             // ADDING THE LATEST POST LIKED BY THE CONNECTION 
-            feedPostIds.push(connection.liked[connection.liked.length-1]);
+            feedPostIds = [...feedPostIds, ...connection.liked]
             // ADDING THE LATEST POSTED COMMENTED BY THE CONNECTION
-            feedPostIds.push(connection.commented[connection.commented.length-1]);
+            feedPostIds = [...feedPostIds, ...connection.commented]
             // ADDING THE LATEST POST BY THE CONNECTION
             feedPostIds.push(connection.posted[connection.posted.length-1]);
         }
         console.log("done with //FETCHING THE ACTIVITY OF CURRENT USER'S CONNECTIONS")
 
         // FETCHING THE LATEST POST LIKED, COMMENTED, POSTED BY THE CURRENT USER
-
-        feedPostIds.push(user.liked[user.liked.length-1])
-        feedPostIds.push(user.commented[user.commented.length-1])
+        feedPostIds = [...feedPostIds, ...user.liked]
+        feedPostIds = [...feedPostIds, ...user.commented]
         feedPostIds.push(user.posted[user.posted.length-1])
 
-        feedPostIds = [...new Set(feedPostIds)];
+        const uniqueFeedPostIds = [...new Set(feedPostIds.map(id => id.toString()))];
 
         let feed = [];
-        for(const feedId of feedPostIds){
+        for(const feedId of uniqueFeedPostIds){
             // FETCHING THE POST BY ID
             const post = await Post.findOne({_id:feedId});
             // FETCH THE USER WHO CREATED THE POST
@@ -116,7 +195,7 @@ exploreRouter.get('/', expressAsyncHandler(async(request, response)=>{
         }
         feed.sort((a, b) => new Date(b.timeOfCreation) - new Date(a.timeOfCreation));
         console.log("done with // ARRANGING / FORMATTING THE POSTDATA")
-        response.status(200).send({feed:feed});
+        response.status(200).send({feed:feed, feedPostIds:uniqueFeedPostIds});
     }catch(error){
         response.status(500).send({message:"Internal Error", error});
     }
