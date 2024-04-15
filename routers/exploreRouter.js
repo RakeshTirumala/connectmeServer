@@ -188,7 +188,7 @@ exploreRouter.get('/', expressAsyncHandler(async(request, response)=>{
                     dp:postUser.dp,
                     timeOfCreation:post.createdAt,
                     currentUserLiked:currentUserLiked,
-                    connectionsLiked:connectionsLiked.length
+                    connectionsLiked:connectionsLiked.length,
                 }
                 feed.push(postData);
             } 

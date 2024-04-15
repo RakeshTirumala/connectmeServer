@@ -15,7 +15,7 @@ const userSchema = mongoose.Schema({
   commented:[],
   posted:[],
   Interests: [String],
-  dp: { type: Buffer },
+  dp: { type: String },
   userType: { type: String },
   Requests: [],
 });

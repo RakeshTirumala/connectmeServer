@@ -19,12 +19,13 @@ loginRouter.post('/', expressAsyncHandler(async(request, response)=>{
         //VALIDATING EMAIL AND PASSWORD
         console.log("VALIDATING EMAIL AND PASSWORD")
         const existingUser = await User.findOne({email:email});
+        console.log("CHECK COMPLETE")
         if(!existingUser) return response.status(401).json({error:"Invalid email or password!"});
-        
+        console.log("FOUND USER")
         const passwordMatch = await bcrypt.compare(password, existingUser.password);
     
         if(!passwordMatch) return response.status(401).json({error:"Invalid email or password!"});
-
+        console.log("PASSWORDS MATCHED!")
         //GENERATE TOKEN 
         console.log("GENERATE TOKEN")
         const token = jwt.sign({ email: email}, process.env.JWT_SECRET_KEY);
@@ -40,7 +41,8 @@ loginRouter.post('/', expressAsyncHandler(async(request, response)=>{
             connections:existingUser.Connections,
             interests:existingUser.Interests,
             userType:existingUser.userType,
-            projects:existingUser.Projects
+            projects:existingUser.Projects,
+            dp:existingUser.dp
         }
         //RESPONSE
         response
@@ -49,7 +51,7 @@ loginRouter.post('/', expressAsyncHandler(async(request, response)=>{
         sameSite:'strict',
         secure:true})
 
-        console.log("the user we are sending", user)
+        console.log("the user we are sending", user, new Date())
         
         response.status(200).json({ message: 'Login successful!', token:token, user:user});
         

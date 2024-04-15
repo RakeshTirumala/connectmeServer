@@ -21,6 +21,7 @@ profileRouter.put('/', expressAsyncHandler(async(request, response)=>{
     const interests = JSON.parse(request.body.interests);
     const newUser = request.body.newUser;
     const userType = request.body.userType;
+    const dp = request.body.dp;
     try{
         const updatedUser = await User.findOneAndUpdate(
             {email:email},
@@ -34,7 +35,8 @@ profileRouter.put('/', expressAsyncHandler(async(request, response)=>{
                     Projects:projects,
                     Interests:interests,
                     newUser:newUser,
-                    userType:userType
+                    userType:userType,
+                    dp:dp
                 }
             },
             {new:true}
