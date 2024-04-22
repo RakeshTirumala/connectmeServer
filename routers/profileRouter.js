@@ -4,11 +4,33 @@ const User = require('../models/userModel');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const CORS = require('../middleware/cors.js');
+const Post = require('../models/postModels.js');
 
 
 const profileRouter = express.Router();
 
 profileRouter.use(CORS);
+
+profileRouter.delete('/', expressAsyncHandler(async(request, response)=>{
+    const postId = request.query.postId;
+    try{
+        const post = await Post.findOne({_id:postId});
+        const postedUser = post.postedBy;
+
+        await User.findOneAndUpdate(
+            { email: postedUser },
+            { $pull: { liked: postId, commented: postId } },
+            { new: true }
+        );
+
+        await Post.findByIdAndDelete(postId);
+
+        response.status(200).json({message:"Success!!!"})
+
+    }catch(error){
+        response.status(500).json({ message: "Internal server error", error: error.message });
+    }
+}))
 
 profileRouter.put('/', expressAsyncHandler(async(request, response)=>{
     const email = request.body.email;
