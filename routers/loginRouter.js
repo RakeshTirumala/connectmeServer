@@ -4,6 +4,7 @@ const User = require('../models/userModel');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const CORS = require('../middleware/cors.js');
+const Post = require('../models/postModels.js');
 
 
 const loginRouter = express.Router();
@@ -30,6 +31,26 @@ loginRouter.post('/', expressAsyncHandler(async(request, response)=>{
         console.log("GENERATE TOKEN")
         const token = jwt.sign({ email: email}, process.env.JWT_SECRET_KEY);
 
+        // PROCESSING USER LIKED POSTS 
+        let liked = []
+        for(const likedPost of existingUser.liked){
+            const post = await Post.findOne({_id:likedPost});
+            liked = [...liked, post];
+        }
+
+        // PROCESSING USER COMMENTED POSTS
+        let commented = []
+        for(const commentedPost of existingUser.commented){
+            const post = await Post.findOne({_id:commentedPost});
+            commented = [...commented, commentedPost];
+        }
+        // PROCESSING USER POSTS
+        let posts = []
+        for(const userPost of existingUser.posts){
+            const post = await Post.findOne({_id:userPost});
+            posts = [...posts, post];
+        }
+
         const user = {
             email:existingUser.email,
             firstName:existingUser.firstName,
@@ -42,7 +63,10 @@ loginRouter.post('/', expressAsyncHandler(async(request, response)=>{
             interests:existingUser.Interests,
             userType:existingUser.userType,
             projects:existingUser.Projects,
-            dp:existingUser.dp
+            dp:existingUser.dp,
+            liked:liked,
+            commented:commented,
+            posts:posts
         }
         //RESPONSE
         response
