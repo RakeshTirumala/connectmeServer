@@ -22,6 +22,7 @@ profileRouter.delete('/', expressAsyncHandler(async(request, response)=>{
             { $pull: { liked: postId, commented: postId, posted:postId} },
             { new: true }
         );
+        console.log("PULLED POSTID FROM LIKED, COMMENTED, POSTED")
         const likes = post.likes;
         const commented = post.comments;
         for(const user of likes){
@@ -31,6 +32,7 @@ profileRouter.delete('/', expressAsyncHandler(async(request, response)=>{
                 {new:true}
             )
         }
+        console.log("PULLED POSTID FROM LIKES")
         for(const user of commented){
             await User.findOneAndUpdate(
                 {email:user.userId},
@@ -38,6 +40,7 @@ profileRouter.delete('/', expressAsyncHandler(async(request, response)=>{
                 {new:true}
             )
         }
+        console.log("PULLED POSTID FROM  COMMENTS")
 
         await Post.findByIdAndDelete(postId);
 

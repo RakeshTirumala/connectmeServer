@@ -32,6 +32,7 @@ loginRouter.post('/', expressAsyncHandler(async(request, response)=>{
         const token = jwt.sign({ email: email}, process.env.JWT_SECRET_KEY);
 
         // PROCESSING USER LIKED POSTS 
+        console.log("PROCESSING USER LIKED POSTS ")
         let liked = []
         for(const likedPost of existingUser.liked){
             const post = await Post.findOne({_id:likedPost});
@@ -40,6 +41,7 @@ loginRouter.post('/', expressAsyncHandler(async(request, response)=>{
         liked.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
         // PROCESSING USER COMMENTED POSTS
+        console.log("PROCESSING USER COMMENTED POSTS")
         let commented = []
         for(const commentedPost of existingUser.commented){
             const post = await Post.findOne({_id:commentedPost});
@@ -47,6 +49,7 @@ loginRouter.post('/', expressAsyncHandler(async(request, response)=>{
         }
         commented.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         // PROCESSING USER POSTS
+        console.log("PROCESSING USER POSTS")
         let posts = []
         for(const userPost of existingUser.posted){
             const post = await Post.findOne({_id:userPost});
