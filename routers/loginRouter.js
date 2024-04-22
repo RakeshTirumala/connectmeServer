@@ -46,7 +46,7 @@ loginRouter.post('/', expressAsyncHandler(async(request, response)=>{
         }
         // PROCESSING USER POSTS
         let posts = []
-        for(const userPost of existingUser.posts){
+        for(const userPost of existingUser.posted){
             const post = await Post.findOne({_id:userPost});
             posts = [...posts, post];
         }
