@@ -36,7 +36,7 @@ loginRouter.post('/', expressAsyncHandler(async(request, response)=>{
         let liked = []
         for(const likedPost of existingUser.liked){
             const post = await Post.findOne({_id:likedPost});
-            liked = [...liked, post];
+            if(post) liked = [...liked, post];
         }
         liked.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
@@ -45,7 +45,7 @@ loginRouter.post('/', expressAsyncHandler(async(request, response)=>{
         let commented = []
         for(const commentedPost of existingUser.commented){
             const post = await Post.findOne({_id:commentedPost});
-            commented = [...commented, post];
+            if(post) commented = [...commented, post];
         }
         commented.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         // PROCESSING USER POSTS
@@ -53,8 +53,9 @@ loginRouter.post('/', expressAsyncHandler(async(request, response)=>{
         let posts = []
         for(const userPost of existingUser.posted){
             const post = await Post.findOne({_id:userPost});
-            posts = [...posts, post];
+            if(post) posts = [...posts, post];
         }
+        console.log(posts)
         posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
         const user = {
