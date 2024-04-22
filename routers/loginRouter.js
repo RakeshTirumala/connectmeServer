@@ -37,19 +37,22 @@ loginRouter.post('/', expressAsyncHandler(async(request, response)=>{
             const post = await Post.findOne({_id:likedPost});
             liked = [...liked, post];
         }
+        liked.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
         // PROCESSING USER COMMENTED POSTS
         let commented = []
         for(const commentedPost of existingUser.commented){
             const post = await Post.findOne({_id:commentedPost});
-            commented = [...commented, commentedPost];
+            commented = [...commented, post];
         }
+        commented.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         // PROCESSING USER POSTS
         let posts = []
         for(const userPost of existingUser.posted){
             const post = await Post.findOne({_id:userPost});
             posts = [...posts, post];
         }
+        posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
         const user = {
             email:existingUser.email,
