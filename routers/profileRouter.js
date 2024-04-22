@@ -19,7 +19,7 @@ profileRouter.delete('/', expressAsyncHandler(async(request, response)=>{
 
         await User.findOneAndUpdate(
             { email: postedUser },
-            { $pull: { liked: postId, commented: postId } },
+            { $pull: { liked: postId, commented: postId, posted:postId} },
             { new: true }
         );
         const likes = post.likes;
@@ -38,7 +38,7 @@ profileRouter.delete('/', expressAsyncHandler(async(request, response)=>{
                 {new:true}
             )
         }
-        
+
         await Post.findByIdAndDelete(postId);
 
         response.status(200).json({message:"Success!!!"})
