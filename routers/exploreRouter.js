@@ -152,9 +152,9 @@ exploreRouter.get('/', expressAsyncHandler(async(request, response)=>{
         for (const connectionEmail of connectionsOfCurrentUser) {
             const connection = await User.findOne({ email: connectionEmail });
             // ADDING THE LATEST POST LIKED BY THE CONNECTION 
-            feedPostIds = [...feedPostIds, ...connection.liked]
+            feedPostIds = [...feedPostIds, connection.liked[connection.liked.length-1]]
             // ADDING THE LATEST POSTED COMMENTED BY THE CONNECTION
-            feedPostIds = [...feedPostIds, ...connection.commented]
+            feedPostIds = [...feedPostIds, connection.commented[connection.commented.length-1]]
             // ADDING THE LATEST POST BY THE CONNECTION
             feedPostIds.push(connection.posted[connection.posted.length-1]);
         }
@@ -164,9 +164,10 @@ exploreRouter.get('/', expressAsyncHandler(async(request, response)=>{
         feedPostIds = [...feedPostIds, ...user.liked]
         feedPostIds = [...feedPostIds, ...user.commented]
         feedPostIds.push(user.posted[user.posted.length-1])
-
+        console.log(feedPostIds)
+        feedPostIds = feedPostIds.filter(val=>val!==undefined)
         const uniqueFeedPostIds = [...new Set(feedPostIds.map(id => id.toString()))];
-
+        console.log("GENERATING FEED")
         let feed = [];
         for(const feedId of uniqueFeedPostIds){
             // FETCHING THE POST BY ID
@@ -178,6 +179,10 @@ exploreRouter.get('/', expressAsyncHandler(async(request, response)=>{
                 // console.log(post.likes, user)
                 const currentUserLiked = post.likes.includes(currentUser);
                 const connectionsLiked = connectionsOfCurrentUser.filter(value=>post.likes.includes(value)); 
+                const listOfCommenters = post.comments.map(obj=>obj.userId);
+                console.log(listOfCommenters)
+                const connectionsCommented = connectionsOfCurrentUser.filter(value=>listOfCommenters.includes(value));
+                console.log(post.postData,connectionsCommented, connectionsCommented.length)
                 const postData = {
                     id:post._id,
                     postData:post.postData,
@@ -189,7 +194,9 @@ exploreRouter.get('/', expressAsyncHandler(async(request, response)=>{
                     timeOfCreation:post.createdAt,
                     currentUserLiked:currentUserLiked,
                     connectionsLiked:connectionsLiked.length,
+                    connectionsCommented:connectionsCommented.length
                 }
+                console.log(postData)
                 feed.push(postData);
             } 
         }
