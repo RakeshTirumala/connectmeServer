@@ -23,7 +23,7 @@ networkRouter.get('/searchQuery', expressAsyncHandler(async (request, response) 
             firstName: firstName,
             lastName: lastName,
             email: { $nin: currentUserConnections } 
-        }).select('firstName lastName email userType dp');
+        }).select('firstName lastName email userType mobile Interests dp Requests');
 
         response.status(200).json(users);
     } catch (error) {
