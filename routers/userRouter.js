@@ -9,6 +9,21 @@ const userRouter = express.Router();
 
 // CORS middleware
 userRouter.use(CORS);
+
+userRouter.put('/password', expressAsyncHandler(async(request, response)=>{
+  const newPassword = request.body.newPassword;
+  const currentUser = request.body.currentUser;
+  const encryptedPassword = await bcrypt.hash(newPassword, 10);
+  try{
+    await User.findOneAndUpdate(
+      {email:currentUser},
+      {$set:{password:encryptedPassword}}
+    )
+    response.status(200).send({message:"Success!!!"});
+  }catch(error){
+    response.status(500).send({message:"Internal error!!!"});
+  }
+}))
  
 userRouter.get(
   "/getUserConnections",
