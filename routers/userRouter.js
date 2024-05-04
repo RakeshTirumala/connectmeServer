@@ -10,6 +10,16 @@ const userRouter = express.Router();
 // CORS middleware
 userRouter.use(CORS);
 
+userRouter.get('/selectedProfile', expressAsyncHandler(async(request, response)=>{
+  const selectedProfile = request.query.selectedProfile;
+  try{
+    const selectedUser = await User.findOne({email:selectedProfile});
+    response.status(200).send({selectedUserData:selectedUser});
+  }catch(error){
+    response.status(500).send({message:"Internal server error!"})
+  }
+}))
+
 userRouter.put('/password', expressAsyncHandler(async(request, response)=>{
   const newPassword = request.body.newPassword;
   const currentUser = request.body.currentUser;
