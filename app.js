@@ -21,7 +21,7 @@ const exploreRouter = require('./routers/exploreRouter')
 
 mongoose.connect(process.env.MONGODB_CLUSTER);
 
-app.use(cors({credentials:true, origin:"*"}));
+app.use(cors({credentials:true, origin:"https://connectme-three.vercel.app/"}));
 
 app.get("/", (req,res)=>{
     console.log("Connectme...");
