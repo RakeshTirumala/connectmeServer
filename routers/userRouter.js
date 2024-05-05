@@ -19,7 +19,7 @@ userRouter.get('/selectedProfile', expressAsyncHandler(async(request, response)=
     let selectedUserPosts = []
     for(const postID of posts){
       const post = await Post.findOne({_id:postID});
-      selectedUserPosts.push(post);
+      if(post) selectedUserPosts.push(post);
     }
 
     response.status(200).send({selectedUserData:selectedUser, posts:selectedUserPosts});
