@@ -10,8 +10,8 @@ networkRouter.use(CORS)
 
 // FETCH PROFILES BASED ON SEARCH QUERY
 networkRouter.get('/searchQuery', expressAsyncHandler(async (request, response) => {
-    const firstName = request.query.name.split(' ')[0];
-    const lastName = request.query.name.split(' ')[1];
+    const firstName = new RegExp(request.query.name.split(' ')[0], 'i'); // 'i' flag makes it case insensitive
+    const lastName = new RegExp(request.query.name.split(' ')[1], 'i');
     const currentUserEmail = request.query.currentUser; 
 
     try {
@@ -20,8 +20,10 @@ networkRouter.get('/searchQuery', expressAsyncHandler(async (request, response) 
         const currentUserConnections = currentUser.Connections.map(connection => connection.email);
 
         const users = await User.find({
-            firstName: firstName,
-            lastName: lastName,
+            $or: [
+                { firstName: { $regex: firstName } },
+                { lastName: { $regex: lastName } }
+            ],
             email: { $nin: currentUserConnections } 
         }).select('firstName lastName email userType mobile Interests dp Requests');
 
@@ -30,6 +32,28 @@ networkRouter.get('/searchQuery', expressAsyncHandler(async (request, response) 
         response.status(500).json({ message: "Internal server error" });
     }
 }));
+
+// networkRouter.get('/searchQuery', expressAsyncHandler(async (request, response) => {
+//     const firstName = request.query.name.split(' ')[0];
+//     const lastName = request.query.name.split(' ')[1];
+//     const currentUserEmail = request.query.currentUser; 
+
+//     try {
+//         const currentUser = await User.findOne({ email: currentUserEmail });
+
+//         const currentUserConnections = currentUser.Connections.map(connection => connection.email);
+
+//         const users = await User.find({
+//             firstName: firstName,
+//             lastName: lastName,
+//             email: { $nin: currentUserConnections } 
+//         }).select('firstName lastName email userType mobile Interests dp Requests');
+
+//         response.status(200).json(users);
+//     } catch (error) {
+//         response.status(500).json({ message: "Internal server error" });
+//     }
+// }));
 
 
 //Accept or Reject
