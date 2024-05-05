@@ -11,7 +11,7 @@ const chatRouter = express.Router();
 chatRouter.use(CORS);
 
 
-chatRouter.get('/byuserId', async(request, response)=>{
+chatRouter.get('/byuserId', authenticateToken, async(request, response)=>{
     try{
         const id = request.query.id
         const current = request.query.current;
@@ -30,7 +30,7 @@ chatRouter.get('/byuserId', async(request, response)=>{
 })
 
 
-chatRouter.get('/', async(request, response)=>{
+chatRouter.get('/', authenticateToken, async(request, response)=>{
     try {
         const connections = JSON.parse(request.query.connections);
         console.log("connections:",connections)

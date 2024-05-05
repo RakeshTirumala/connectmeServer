@@ -10,7 +10,7 @@ const exploreRouter = express.Router();
 exploreRouter.use(CORS);
 
 // FETCHING LIKES OF A POST
-exploreRouter.get('/postActivity/likes', expressAsyncHandler(async(request, response)=>{
+exploreRouter.get('/postActivity/likes', authenticateToken,expressAsyncHandler(async(request, response)=>{
     const postId = request.query.postId;
     try{
         const post = await Post.findOne({_id:postId})
@@ -27,7 +27,7 @@ exploreRouter.get('/postActivity/likes', expressAsyncHandler(async(request, resp
 }))
 
 // FETCHING COMMENTS OF A POST
-exploreRouter.get('/postActivity/comments', expressAsyncHandler(async(request, response)=>{
+exploreRouter.get('/postActivity/comments', authenticateToken,expressAsyncHandler(async(request, response)=>{
     const postId = request.query.postId;
     console.log(postId)
     try{
@@ -54,7 +54,7 @@ exploreRouter.get('/postActivity/comments', expressAsyncHandler(async(request, r
 }))
 
 // UPDATING COMMENTS ARRAY OF THE POST 
-exploreRouter.put('/postActivityComments', expressAsyncHandler(async(request, response)=>{
+exploreRouter.put('/postActivityComments', authenticateToken,expressAsyncHandler(async(request, response)=>{
     const {currentUser, postId, commentData} = request.body;
     let updated = null;
     try{
@@ -77,7 +77,7 @@ exploreRouter.put('/postActivityComments', expressAsyncHandler(async(request, re
 }))
 
 //  UPDATING LIKES ARRAY OF THE POST AS WELL AS THE LIKED ARRAY OF THE USER
-exploreRouter.put('/postActivity', expressAsyncHandler(async(request, response)=>{
+exploreRouter.put('/postActivity', authenticateToken,expressAsyncHandler(async(request, response)=>{
     const {currentUser, postId, shouldIAddUserLike} = request.body;
     let updated = null;
     try{
@@ -115,7 +115,7 @@ exploreRouter.put('/postActivity', expressAsyncHandler(async(request, response)=
 }))
 
 // INSERTING A POST TO THE POST SCHEMA
-exploreRouter.post('/', expressAsyncHandler(async (request, response) => {
+exploreRouter.post('/', authenticateToken,expressAsyncHandler(async (request, response) => {
     try {
         const currentUser = request.body.currentUser;
         const post = request.body.post; 

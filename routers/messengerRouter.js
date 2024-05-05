@@ -2,14 +2,15 @@ const express = require('express')
 const expressAsyncHandler = require('express-async-handler');
 const User = require('../models/userModel');
 const CORS = require('../middleware/cors.js');
-const Chat = require('../models/chatModel')
+const Chat = require('../models/chatModel');
+const authenticateToken = require('../middleware/authenticateToken.js');
 
 const messengerRouter = express.Router();
 
 messengerRouter.use(CORS)
 
 //PAST CONVERSATIONS
-messengerRouter.get('/pastConversations', expressAsyncHandler(async(request, response)=>{
+messengerRouter.get('/pastConversations', authenticateToken, expressAsyncHandler(async(request, response)=>{
     const currentUser = request.query.email;
     let uniqueUsersAndChatMap = new Map();
     try{
@@ -64,7 +65,7 @@ messengerRouter.get('/pastConversations', expressAsyncHandler(async(request, res
 
 
 // CONNECTIONS
-messengerRouter.get('/connections', expressAsyncHandler(async(request, response)=>{
+messengerRouter.get('/connections', authenticateToken,expressAsyncHandler(async(request, response)=>{
     const currentUserEmail = request.query.email;
     try{
         const user = await User.findOne({email:currentUserEmail});

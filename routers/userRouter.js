@@ -5,13 +5,14 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const CORS = require("../middleware/cors.js");
 const Post = require("../models/postModels.js");
+const authenticateToken = require("../middleware/authenticateToken.js");
 
 const userRouter = express.Router();
 
 // CORS middleware
 userRouter.use(CORS);
 
-userRouter.get('/selectedProfile', expressAsyncHandler(async(request, response)=>{
+userRouter.get('/selectedProfile', authenticateToken,expressAsyncHandler(async(request, response)=>{
   const selectedProfile = request.query.selectedProfile;
   try{
     const selectedUser = await User.findOne({email:selectedProfile});
@@ -28,7 +29,7 @@ userRouter.get('/selectedProfile', expressAsyncHandler(async(request, response)=
   }
 }))
 
-userRouter.put('/password', expressAsyncHandler(async(request, response)=>{
+userRouter.put('/password', authenticateToken,expressAsyncHandler(async(request, response)=>{
   const newPassword = request.body.newPassword;
   const currentUser = request.body.currentUser;
   const encryptedPassword = await bcrypt.hash(newPassword, 10);
@@ -45,6 +46,7 @@ userRouter.put('/password', expressAsyncHandler(async(request, response)=>{
  
 userRouter.get(
   "/getUserConnections",
+  authenticateToken,
   expressAsyncHandler(async (request, response) => {
     const email = request.query.email;
     try {

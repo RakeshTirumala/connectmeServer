@@ -5,13 +5,14 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const CORS = require('../middleware/cors.js');
 const Post = require('../models/postModels.js');
+const authenticateToken = require('../middleware/authenticateToken.js');
 
 
 const profileRouter = express.Router();
 
 profileRouter.use(CORS);
 
-profileRouter.delete('/', expressAsyncHandler(async(request, response)=>{
+profileRouter.delete('/', authenticateToken,expressAsyncHandler(async(request, response)=>{
     const postId = request.query.postId;
     try{
         const post = await Post.findOne({_id:postId});
@@ -51,7 +52,7 @@ profileRouter.delete('/', expressAsyncHandler(async(request, response)=>{
     }
 }))
 
-profileRouter.put('/', expressAsyncHandler(async(request, response)=>{
+profileRouter.put('/', authenticateToken,expressAsyncHandler(async(request, response)=>{
     const email = request.body.email;
     const fn = request.body.fn;
     const ln = request.body.ln;

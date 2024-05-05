@@ -2,6 +2,7 @@ const express = require("express");
 const expressAsyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const CORS = require("../middleware/cors.js");
+const authenticateToken = require("../middleware/authenticateToken.js");
 
 const networkRouter = express.Router();
 
@@ -9,7 +10,7 @@ networkRouter.use(CORS)
 
 
 // FETCH PROFILES BASED ON SEARCH QUERY
-networkRouter.get('/searchQuery', expressAsyncHandler(async (request, response) => {
+networkRouter.get('/searchQuery', authenticateToken,expressAsyncHandler(async (request, response) => {
     const searchName = request.query.name.trim(); // Trim whitespace
     const currentUserEmail = request.query.currentUser; 
 
@@ -58,7 +59,7 @@ networkRouter.get('/searchQuery', expressAsyncHandler(async (request, response) 
 
 
 //Accept or Reject
-networkRouter.put('/connectionRequest', expressAsyncHandler(async (request, response) => {
+networkRouter.put('/connectionRequest', authenticateToken,expressAsyncHandler(async (request, response) => {
     const decision = request.body.decision;
     const currentUser = request.body.currentUser;
     const actionOnUser = request.body.actionOnUser;
@@ -91,7 +92,7 @@ networkRouter.put('/connectionRequest', expressAsyncHandler(async (request, resp
 }));
 
 //GET REQUESTS
-networkRouter.get('/requests', expressAsyncHandler(async(request, response)=>{
+networkRouter.get('/requests', authenticateToken,expressAsyncHandler(async(request, response)=>{
     const currentUser = request.query.email;
     try{
         let requests = await User.findOne({email:currentUser});
@@ -108,7 +109,7 @@ networkRouter.get('/requests', expressAsyncHandler(async(request, response)=>{
 }))
 
 // UPDATE THE REQUESTS LIST OF A USER
-networkRouter.put('/requests', expressAsyncHandler(async(request, response)=>{
+networkRouter.put('/requests', authenticateToken,expressAsyncHandler(async(request, response)=>{
     const currentUser = request.body.currentUser;
     const targetUser = request.body.targetUser;
     try{
@@ -127,7 +128,7 @@ networkRouter.put('/requests', expressAsyncHandler(async(request, response)=>{
  
 
 // GET STUDENTS
-networkRouter.get('/students', expressAsyncHandler(async(request, response)=>{
+networkRouter.get('/students', authenticateToken,expressAsyncHandler(async(request, response)=>{
     const email = request.query.email;
     const interests = JSON.parse(request.query.interests);
     try{
@@ -168,7 +169,7 @@ networkRouter.get('/students', expressAsyncHandler(async(request, response)=>{
 }))
 
 // GET PROFESSIONALS
-networkRouter.get('/professionals', expressAsyncHandler(async(request, response)=>{
+networkRouter.get('/professionals', authenticateToken,expressAsyncHandler(async(request, response)=>{
     const email = request.query.email;
     const interests = JSON.parse(request.query.interests);
     // console.log(interests)
