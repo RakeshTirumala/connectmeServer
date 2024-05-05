@@ -70,20 +70,15 @@ loginRouter.post('/', expressAsyncHandler(async(request, response)=>{
             interests:existingUser.Interests,
             userType:existingUser.userType,
             projects:existingUser.Projects,
-            dp:existingUser.dp,
+            dp:existingUser.dp, 
             liked:liked,
             commented:commented,
             posts:posts
         }
         //RESPONSE
-        response
-        .cookie('token', token,
-        {httpOnly:true,
-        sameSite:'strict',
-        secure:true})
-
-        console.log("the user we are sending", user, new Date())
-        
+        // console.log("the user we are sending", user, new Date())
+        // console.log(token)
+        response.cookie('token', token, {httpOnly:true, secure: true})
         response.status(200).json({ message: 'Login successful!', token:token, user:user});
         
     }catch(error){
