@@ -21,7 +21,7 @@ const exploreRouter = require('./routers/exploreRouter')
 
 mongoose.connect(process.env.MONGODB_CLUSTER);
 
-app.use(cors());
+app.use(cors({credentials:true, origin:"*"}));
 
 app.get("/", (req,res)=>{
     console.log("Connectme...");

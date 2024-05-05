@@ -78,8 +78,10 @@ loginRouter.post('/', expressAsyncHandler(async(request, response)=>{
         //RESPONSE
         // console.log("the user we are sending", user, new Date())
         // console.log(token)
-        response.cookie('token', token, {httpOnly:true, secure: true})
-        response.status(200).json({ message: 'Login successful!', token:token, user:user});
+        response
+        .status(200)
+        .cookie('token', token, {httpOnly:true})
+        .json({ message: 'Login successful!', token:token, user:user});
         
     }catch(error){
         console.log(error)
