@@ -4,6 +4,7 @@ const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const CORS = require("../middleware/cors.js");
+const Post = require("../models/postModels.js");
 
 const userRouter = express.Router();
 
@@ -14,7 +15,14 @@ userRouter.get('/selectedProfile', expressAsyncHandler(async(request, response)=
   const selectedProfile = request.query.selectedProfile;
   try{
     const selectedUser = await User.findOne({email:selectedProfile});
-    response.status(200).send({selectedUserData:selectedUser});
+    const posts = selectedUser.posted;
+    let selectedUserPosts = []
+    for(const postID of posts){
+      const post = await Post.findOne({_id:postID});
+      selectedUserPosts.push(post);
+    }
+
+    response.status(200).send({selectedUserData:selectedUser, posts:selectedUserPosts});
   }catch(error){
     response.status(500).send({message:"Internal server error!"})
   }
