@@ -10,7 +10,7 @@ const authenticateToken = require("../middleware/authenticateToken.js");
 const userRouter = express.Router();
 
 // CORS middleware
-userRouter.use(CORS);
+// userRouter.use(CORS);
 
 userRouter.delete('/logout', authenticateToken, expressAsyncHandler(async(request, response)=>{
   response.status(200).clearCookie('token').send('cookies cleared');

@@ -7,7 +7,7 @@ const authenticateToken = require('../middleware/authenticateToken.js');
 
 const messengerRouter = express.Router();
 
-messengerRouter.use(CORS)
+// messengerRouter.use(CORS)
 
 //PAST CONVERSATIONS
 messengerRouter.get('/pastConversations', authenticateToken, expressAsyncHandler(async(request, response)=>{

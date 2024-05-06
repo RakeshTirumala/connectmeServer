@@ -10,7 +10,7 @@ const Post = require('../models/postModels.js');
 const loginRouter = express.Router();
 
 // CORS middleware
-loginRouter.use(CORS);
+// loginRouter.use(CORS);
 
 loginRouter.post('/', expressAsyncHandler(async(request, response)=>{
     const email = request.body.email;

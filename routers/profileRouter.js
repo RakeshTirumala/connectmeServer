@@ -10,7 +10,7 @@ const authenticateToken = require('../middleware/authenticateToken.js');
 
 const profileRouter = express.Router();
 
-profileRouter.use(CORS);
+// profileRouter.use(CORS);
 
 profileRouter.delete('/', authenticateToken,expressAsyncHandler(async(request, response)=>{
     const postId = request.query.postId;

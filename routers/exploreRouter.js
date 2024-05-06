@@ -7,7 +7,7 @@ const authenticateToken = require("../middleware/authenticateToken.js");
 
 const exploreRouter = express.Router();
 
-exploreRouter.use(CORS);
+// exploreRouter.use(CORS);
 
 // FETCHING LIKES OF A POST
 exploreRouter.get('/postActivity/likes', authenticateToken,expressAsyncHandler(async(request, response)=>{

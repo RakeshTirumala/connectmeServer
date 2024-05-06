@@ -8,7 +8,7 @@ const chatRouter = express.Router();
 
 
 // CORS middleware
-chatRouter.use(CORS);
+// chatRouter.use(CORS);
 
 
 chatRouter.get('/byuserId', authenticateToken, async(request, response)=>{

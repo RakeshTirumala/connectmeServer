@@ -7,7 +7,7 @@ const CORS = require('../middleware/cors.js');
 const signupRouter = express.Router()
 
 // CORS middleware
-signupRouter.use(CORS);
+// signupRouter.use(CORS);
 
 signupRouter.post('/', expressAsyncHandler(async(request, response)=>{
     const email = request.body.email;

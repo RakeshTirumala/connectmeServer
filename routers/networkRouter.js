@@ -6,7 +6,7 @@ const authenticateToken = require("../middleware/authenticateToken.js");
 
 const networkRouter = express.Router();
 
-networkRouter.use(CORS)
+// networkRouter.use(CORS)
 
 
 // FETCH PROFILES BASED ON SEARCH QUERY
