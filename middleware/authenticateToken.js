@@ -2,7 +2,7 @@
 const jwt = require('jsonwebtoken');
 function authenticateToken(request, response, next){
     const token = request.cookies.token;
-    // console.log("token", token)
+    console.log("token", token)
     if (!token) {
         return response.status(401).json({ message: "Authentication token missing" });
     }
