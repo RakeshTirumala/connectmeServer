@@ -6,11 +6,26 @@ const jwt = require("jsonwebtoken");
 const CORS = require("../middleware/cors.js");
 const Post = require("../models/postModels.js");
 const authenticateToken = require("../middleware/authenticateToken.js");
-
+const Help = require("../models/helpModel.js");
+ 
 const userRouter = express.Router();
 
 // CORS middleware
 // userRouter.use(CORS);
+
+userRouter.post('/help', authenticateToken, expressAsyncHandler(async(request, response)=>{
+  try{
+    const newHelp = new Help({
+      from:request.body.currentUser,
+      subject:request.body.subject,
+      content:request.body.content
+    })
+    await newHelp.save();
+    response.sendStatus(200);
+  }catch(error){
+    response.sendStatus(500)
+  }
+}))
 
 userRouter.delete('/logout', authenticateToken, expressAsyncHandler(async(request, response)=>{
   response.status(200).clearCookie('token').send('cookies cleared');
