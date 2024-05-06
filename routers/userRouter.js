@@ -12,6 +12,10 @@ const userRouter = express.Router();
 // CORS middleware
 userRouter.use(CORS);
 
+userRouter.delete('/logout', authenticateToken, expressAsyncHandler(async(request, response)=>{
+  response.status(200).clearCookie('token').send('cookies cleared');
+}))
+
 userRouter.get('/selectedProfile', authenticateToken,expressAsyncHandler(async(request, response)=>{
   const selectedProfile = request.query.selectedProfile;
   try{
